@@ -3,8 +3,15 @@ import { Navigate, Outlet } from 'react-router-dom';
 import { SignIn, action as signInAction } from './auth/SignIn';
 import { SignUp, action as signUpAction } from './auth/SignUp';
 import { Requests, loader as requestsLoader } from './client/Requests';
-import { NewRequest, action as newRequestAction, } from './client/Requests/NewRequest';
-import { UpdateRequest, action as updateRequestAction, } from '@/pages/client/Requests/UpdateRequest';
+import { loader as requestLoader } from './client/Requests/UpdateRequest';
+import {
+	NewRequest,
+	action as newRequestAction,
+} from './client/Requests/NewRequest';
+import {
+	UpdateRequest,
+	action as updateRequestAction,
+} from '@/pages/client/Requests/UpdateRequest';
 
 function RootLayout() {
 	return (

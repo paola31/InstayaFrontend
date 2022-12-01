@@ -32,6 +32,7 @@ export function RequestItem({ request, isEven = false }) {
 			<td className={colClasses}>
 				<Link
 					to={targetLink}
+					state={{ request: request }}
 					className="text-indigo-600 cursor-pointer hover:underline"
 				>
 					{formattedServiceNumber}

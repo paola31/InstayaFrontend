@@ -132,18 +132,17 @@ export const fieldsSchema = z.object({
 		}),
 });
 
-export function UpdateRequestForm() {
-
+export function UpdateRequestForm(request) {
 	const { state } = useNavigation();
-
 	const isSubmitting = state === 'submitting';
-
 	const actionData = useActionData();
 	const { success } = actionData ?? { success: true, issue: '' };
-
 	const { hasError, onFieldUpdate, toggleFieldError } = useFormFields({
 		initialValues,
 	});
+	const requestData = request.request;
+	const requestDate = requestData.due.split('T');
+	const requestHour = 'Entrega - hora actual: ' + requestDate[1];
 
 	return (
 		<Form
@@ -156,7 +155,7 @@ export function UpdateRequestForm() {
 				<Field
 					label="Destinatario - nombre"
 					schema={fieldsSchema.shape.toOwner}
-					initialValue={initialValues.toOwner}
+					initialValue={requestData.toOwner}
 					onUpdate={onFieldUpdate}
 					onError={toggleFieldError}
 					inputProps={{
@@ -169,7 +168,7 @@ export function UpdateRequestForm() {
 				<Field
 					label="Destinatario - CC/NIT"
 					schema={fieldsSchema.shape.toOwnerId}
-					initialValue={initialValues.toOwnerId}
+					initialValue={requestData.toOwnerId}
 					onUpdate={onFieldUpdate}
 					onError={toggleFieldError}
 					inputProps={{
@@ -185,7 +184,7 @@ export function UpdateRequestForm() {
 				<DatepickerField
 					label="Entrega - fecha"
 					schema={fieldsSchema.shape.dueDate}
-					initialValue={initialValues.dueDate}
+					initialValue={ requestDate[0] }
 					onUpdate={onFieldUpdate}
 					onError={toggleFieldError}
 					datepickerProps={{
@@ -197,8 +196,8 @@ export function UpdateRequestForm() {
 				/>
 
 				<SelectField
-					label="Entrega - hora"
-					initialValue={initialValues.dueHour}
+					label={requestHour}
+					initialValue={ "0" }
 					schema={fieldsSchema.shape.dueHour}
 					onUpdate={onFieldUpdate}
 					onError={toggleFieldError}
@@ -213,14 +212,14 @@ export function UpdateRequestForm() {
 			{/* Detalles */}
 			<div className="flex space-x-4">
 				<CheckboxField
-					initialValue={initialValues.isFragile}
+					initialValue={requestData.isFragile}
 					label="¿Es mercancía frágil?"
 					checkboxProps={{ name: 'isFragile' }}
 				/>
 
 				<SelectField
 					label="Estado"
-					initialValue={initialValues.state}
+					initialValue={requestData.state}
 					schema={fieldsSchema.shape.state}
 					onUpdate={onFieldUpdate}
 					onError={toggleFieldError}
@@ -228,6 +227,7 @@ export function UpdateRequestForm() {
 						name: 'state',
 						required: true,
 						options: [
+							{ value: 'cancelado', display: 'Cancelado' },
 							{ value: 'guardado', display: 'Guardado' },
 							{ value: 'cumplido', display: 'Cumplido' },
 						],
@@ -240,7 +240,7 @@ export function UpdateRequestForm() {
 				<Field
 					label="Ancho (cm)"
 					schema={fieldsSchema.shape.width}
-					initialValue={initialValues.width}
+					initialValue={requestData.width.toString()}
 					onUpdate={onFieldUpdate}
 					onError={toggleFieldError}
 					inputProps={{
@@ -252,7 +252,7 @@ export function UpdateRequestForm() {
 				<Field
 					label="Alto (cm)"
 					schema={fieldsSchema.shape.height}
-					initialValue={initialValues.height}
+					initialValue={requestData.height.toString()}
 					onUpdate={onFieldUpdate}
 					onError={toggleFieldError}
 					inputProps={{
@@ -264,7 +264,7 @@ export function UpdateRequestForm() {
 				<Field
 					label="Profundidad (cm)"
 					schema={fieldsSchema.shape.depth}
-					initialValue={initialValues.depth}
+					initialValue={requestData.depth.toString()}
 					onUpdate={onFieldUpdate}
 					onError={toggleFieldError}
 					inputProps={{
@@ -277,7 +277,7 @@ export function UpdateRequestForm() {
 				<Field
 					label="Peso (Kg)"
 					schema={fieldsSchema.shape.weight}
-					initialValue={initialValues.weight}
+					initialValue={requestData.weight.toString()}
 					onUpdate={onFieldUpdate}
 					onError={toggleFieldError}
 					inputProps={{
@@ -293,7 +293,7 @@ export function UpdateRequestForm() {
 				<Field
 					label="Origen - ciudad"
 					schema={fieldsSchema.shape.fromCity}
-					initialValue={initialValues.fromCity}
+					initialValue={requestData.fromCity}
 					onUpdate={onFieldUpdate}
 					onError={toggleFieldError}
 					inputProps={{
@@ -305,7 +305,7 @@ export function UpdateRequestForm() {
 				<Field
 					label="Origen - dirección"
 					schema={fieldsSchema.shape.fromAddress}
-					initialValue={initialValues.fromAddress}
+					initialValue={requestData.fromAddress}
 					onUpdate={onFieldUpdate}
 					onError={toggleFieldError}
 					inputProps={{
@@ -321,7 +321,7 @@ export function UpdateRequestForm() {
 				<Field
 					label="Destino - ciudad"
 					schema={fieldsSchema.shape.toCity}
-					initialValue={initialValues.toCity}
+					initialValue={requestData.toCity}
 					onUpdate={onFieldUpdate}
 					onError={toggleFieldError}
 					inputProps={{
@@ -333,7 +333,7 @@ export function UpdateRequestForm() {
 				<Field
 					label="Destino - dirección"
 					schema={fieldsSchema.shape.toAddress}
-					initialValue={initialValues.toAddress}
+					initialValue={requestData.toAddress}
 					onUpdate={onFieldUpdate}
 					onError={toggleFieldError}
 					inputProps={{
@@ -351,7 +351,7 @@ export function UpdateRequestForm() {
 					hasError={!success}
 					isLoading={isSubmitting}
 				>
-					Generar solicitud
+					Actualizar solicitud
 				</Button>
 			</div>
 		</Form>

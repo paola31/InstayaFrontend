@@ -1,4 +1,4 @@
-import { Link, redirect, useParams } from 'react-router-dom';
+import { Link, redirect, useLocation } from 'react-router-dom';
 import { doRequest, parseFormData } from '@/api/utilities';
 import { addNewRequest } from '@/api/v1/request';
 import { Divider } from '@/components/Divider';
@@ -8,6 +8,11 @@ import {
 	UpdateRequestForm,
 	formFields as updateRequestFields,
 } from '@/components/Forms/UpdateRequestForm';
+
+export async function loader() {
+	// eslint-disable-next-line no-console
+	console.log('Loader');
+}
 
 export async function action({ request }) {
 	const formData = await request.formData();
@@ -37,9 +42,9 @@ export async function action({ request }) {
 }
 
 export function UpdateRequest() {
-	const params = useParams();
-	// eslint-disable-next-line no-console
-	console.dir(params.id);
+	const location = useLocation();
+	const request = location.state.request;
+
 	return (
 		<section className="flex flex-col items-center justify-center px-6 py-8 h-screen">
 			<div className="w-full bg-white rounded-lg shadow md:mt-0 sm:max-w-3xl">
@@ -57,7 +62,7 @@ export function UpdateRequest() {
 					</div>
 					<Divider />
 
-					<UpdateRequestForm />
+					<UpdateRequestForm request={request} />
 				</div>
 			</div>
 		</section>
