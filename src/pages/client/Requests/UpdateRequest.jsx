@@ -1,6 +1,6 @@
 import { Link, redirect, useLocation } from 'react-router-dom';
 import { doRequest, parseFormData } from '@/api/utilities';
-import { addNewRequest } from '@/api/v1/request';
+import { updateRequest } from '@/api/v1/request';
 import { Divider } from '@/components/Divider';
 import { Logo } from '@/components/Logo';
 
@@ -29,8 +29,8 @@ export async function action({ request }) {
 	try {
 		await doRequest({
 			body,
-			endpoint: addNewRequest,
-			success: 'Se ha guardado su solicitud!',
+			endpoint: updateRequest,
+			success: 'Se ha actualizado la solicitud!',
 		});
 
 		return redirect('/client/requests');

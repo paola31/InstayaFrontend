@@ -48,9 +48,7 @@ export function RequestItem({ request, isEven = false }) {
 			<td className={colClasses} title={toAddress}>
 				{formattedToAddress}
 			</td>
-			<td className={colClasses}>
-				<RequestState currentState={state} />
-			</td>
+			<td className={colClasses}>{formattedState}</td>
 		</tr>
 	);
 }

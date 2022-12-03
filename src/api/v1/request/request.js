@@ -19,11 +19,10 @@ export const addNewRequest = (body) =>
 			.catch((err) => reject(err));
 	});
 
-export const findOne = (id) => {
-	console.log("id ---> " + id);
+export const updateRequest = (body) =>
 	new Promise((resolve, reject) => {
 		base
-			.post(`${controller}/find-one`, id)
+			.post(`${controller}/update`, body)
 			.then((res) => resolve(res))
-			.catch((err) => console.log(err));
-	})};
+			.catch((err) => reject(err));
+	});

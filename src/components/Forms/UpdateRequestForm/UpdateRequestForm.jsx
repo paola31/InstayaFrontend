@@ -27,6 +27,7 @@ const initialValues = {
 };
 
 export const formFields = [
+	'id',
 	'isFragile',
 	'width',
 	'height',
@@ -73,6 +74,7 @@ const sharedNumberSchema = z
 	});
 
 export const fieldsSchema = z.object({
+	id: z.string(),
 	isFragile: z.boolean(),
 	width: sharedNumberSchema,
 	height: sharedNumberSchema,
@@ -101,7 +103,7 @@ export const fieldsSchema = z.object({
 			{ message: 'La fecha tiene que ser 24h despúes de hoy' },
 		),
 	dueHour: z.enum(hourValues),
-	state: z.enum(['guardado', 'cumplido']),
+	state: z.enum(['guardado', 'cumplido', 'cancelado']),
 	fromCity: z
 		.string()
 		.min(3, { message: 'Mínimo 3 caracteres' })
@@ -143,13 +145,23 @@ export function UpdateRequestForm(request) {
 	const requestData = request.request;
 	const requestDate = requestData.due.split('T');
 	const requestHour = 'Entrega - hora actual: ' + requestDate[1];
-
+	const cleanHour = requestDate[1].split('.')[0];
+	const formAction = '/client/requests/update/' + requestData._id;
 	return (
 		<Form
 			className="flex flex-col pr-8 pl-2 space-y-6 w-full max-h-150 overflow-y-auto scrollbar-thin scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar-thumb-indigo-600 scrollbar-track-indigo-300"
-			action="/client/requests/new"
+			action={formAction}
 			method="post"
 		>
+			<Field
+				label=""
+				schema={fieldsSchema.shape.id}
+				initialValue={requestData._id}
+				inputProps={{
+					name: 'id',
+					type: 'hidden',
+				}}
+			/>
 			{/* Destinatario */}
 			<div className="flex space-x-4">
 				<Field
@@ -197,7 +209,7 @@ export function UpdateRequestForm(request) {
 
 				<SelectField
 					label={requestHour}
-					initialValue={ "0" }
+					initialValue={ cleanHour }
 					schema={fieldsSchema.shape.dueHour}
 					onUpdate={onFieldUpdate}
 					onError={toggleFieldError}
